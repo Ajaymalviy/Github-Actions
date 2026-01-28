@@ -1,30 +1,30 @@
-name: Deploy Nginx HTML App Locally
+name: Deploy FastAPI App
 
 on:
   push:
     branches:
-      - main  # main branch me push hone par trigger
+      - main   # main branch me push hone par trigger
 
 jobs:
   deploy:
-    runs-on: self-hosted  # important: use self-hosted runner
+    runs-on: self-hosted  # self-hosted runner pe run hoga; remote server ho to ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout Code
       uses: actions/checkout@v4
 
     - name: Build Docker Image
       run: |
-        docker build -t html-nginx-app .
+        docker build -t fastapi_app:latest .
 
     - name: Stop Old Container
       run: |
-        docker stop html-nginx-container || true
-        docker rm html-nginx-container || true
+        docker stop fastapi_app || true
+        docker rm fastapi_app || true
 
     - name: Run Docker Container
       run: |
         docker run -d \
-        --name html-nginx-container \
-        -p 8085:80 \
-        html-nginx-app
+        --name fastapi_app \
+        -p 8000:8000 \
+        fastapi_app:latest
